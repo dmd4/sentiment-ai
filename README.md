@@ -92,16 +92,73 @@ docker-compose up --build
 **Try the live API:** https://sentiment-ai-iwp2.onrender.com/docs
 
 **Example API calls:**
-```bash
-# Positive sentiment
-curl -X POST https://sentiment-ai-iwp2.onrender.com/api/v1/analyze \
-  -H "Content-Type: application/json" \
-  -d '{"text": "This product is excellent!"}'
 
-# Negation handling  
+### Positive Sentiment
+```bash
 curl -X POST https://sentiment-ai-iwp2.onrender.com/api/v1/analyze \
   -H "Content-Type: application/json" \
-  -d '{"text": "This product is not bad"}'
+  -d '{"text": "we love this restaurant"}'
+```
+
+**Response:**
+```json
+{
+  "text": "we love this restaurant",
+  "sentiment": "positive",
+  "confidence": 0.217,
+  "processed_tokens": null
+}
+```
+
+### Negative Sentiment
+```bash
+curl -X POST https://sentiment-ai-iwp2.onrender.com/api/v1/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"text": "i hate this movie"}'
+```
+
+**Response:**
+```json
+{
+  "text": "i hate this movie",
+  "sentiment": "negative",
+  "confidence": 0.767,
+  "processed_tokens": null
+}
+```
+
+### Negation Handling (Advanced Feature)
+```bash
+curl -X POST https://sentiment-ai-iwp2.onrender.com/api/v1/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"text": "not bad"}'
+```
+
+**Response:**
+```json
+{
+  "text": "not bad",
+  "sentiment": "positive",
+  "confidence": 0.75,
+  "processed_tokens": null
+}
+```
+
+### Strong Negative Sentiment
+```bash
+curl -X POST https://sentiment-ai-iwp2.onrender.com/api/v1/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"text": "very very horrible"}'
+```
+
+**Response:**
+```json
+{
+  "text": "very very horrible",
+  "sentiment": "negative",
+  "confidence": 0.748,
+  "processed_tokens": null
+}
 ```
 
 > **⏱️ Note**: The API may take 30-60 seconds to respond on the first request after periods of inactivity due to Render's free tier sleep behavior. Subsequent requests will be fast (~32ms average response time).
