@@ -1,0 +1,42 @@
+{
+  "family": "sentiment-analysis-api",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::YOUR_ACCOUNT:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "sentiment-api",
+      "image": "YOUR_ECR_REPO/sentiment-analysis:latest",
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "MODEL_PATH",
+          "value": "/app/models/sentiment_analysis_model_v2.h5"
+        },
+        {
+          "name": "TOKENIZER_PATH", 
+          "value": "/app/models/tokenizer_v2.pickle"
+        },
+        {
+          "name": "MAX_SEQUENCE_LENGTH",
+          "value": "22"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/sentiment-analysis",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}

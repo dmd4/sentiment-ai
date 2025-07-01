@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: sentiment-analysis-api
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: MODEL_PATH
+        value: /app/models/sentiment_analysis_model_v2.h5
+      - key: TOKENIZER_PATH
+        value: /app/models/tokenizer_v2.pickle
+      - key: MAX_SEQUENCE_LENGTH
+        value: 22

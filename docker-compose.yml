@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+    environment:
+      - MODEL_PATH=/app/models/sentiment_analysis_model_v2.h5
+      - TOKENIZER_PATH=/app/models/tokenizer_v2.pickle
+      - MAX_SEQUENCE_LENGTH=22
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
