@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sentiment-ai-service
+  labels:
+    app: sentiment-ai
+spec:
+  type: ClusterIP
+  selector:
+    app: sentiment-ai
+  ports:
+  - port: 80
+    targetPort: 8000
+    protocol: TCP
+    name: http

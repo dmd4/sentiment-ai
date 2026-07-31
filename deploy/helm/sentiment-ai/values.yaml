@@ -1,0 +1,48 @@
+# Default values for sentiment-ai chart.
+
+replicaCount: 2
+
+image:
+  repository: sentiment-ai
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: sentiment-ai.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+env:
+  MODEL_PATH: "/app/models/sentiment_analysis_model_v2.h5"
+  TOKENIZER_PATH: "/app/models/tokenizer_v2.pickle"
+  MAX_SEQUENCE_LENGTH: "22"
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+probes:
+  liveness:
+    initialDelaySeconds: 15
+    periodSeconds: 20
+  readiness:
+    initialDelaySeconds: 5
+    periodSeconds: 10

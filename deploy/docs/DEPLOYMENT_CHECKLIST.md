@@ -46,6 +46,19 @@
 - ✅ Auto-scaling
 - ⚠️ Requires GCP setup
 
+### **Kubernetes (Kustomize / Helm)**
+- ✅ Production-grade cloud orchestration (EKS, GKE, AKS, Kind)
+- ✅ Auto-scaling, self-healing, and load balancing
+- ✅ Helm package management (`deploy/helm/sentiment-ai`)
+- ⚠️ Requires Kubernetes cluster
+
+### **Argo CD (GitOps)**
+- ✅ Continuous delivery & automated cluster sync from Git
+- ✅ Automatic drift detection and self-healing
+- ✅ Declarative manifest (`deploy/argocd/application.yaml`)
+- ⚠️ Requires Argo CD installed on cluster
+
+
 ## 📊 Post-Deployment Testing
 
 ```bash

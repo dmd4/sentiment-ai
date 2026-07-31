@@ -10,6 +10,7 @@ This guide provides step-by-step instructions for deploying the Sentiment Analys
    - [AWS Elastic Beanstalk](#aws-elastic-beanstalk)
    - [Google Cloud Run](#google-cloud-run)
    - [Heroku](#heroku)
+   - [Kubernetes (Kind / Minikube / Cloud K8s)](#kubernetes-kind--minikube--cloud-k8s)
 4. [Monitoring and Maintenance](#monitoring-and-maintenance)
 
 ## Local Deployment
@@ -167,7 +168,72 @@ This guide provides step-by-step instructions for deploying the Sentiment Analys
    heroku open
    ```
 
+### Kubernetes (Kind / Minikube / Cloud K8s)
+
+#### Prerequisites
+
+- `kubectl` CLI installed
+- A local Kubernetes cluster (`kind`, `minikube`, `k3s`) or managed cloud cluster (EKS, GKE, AKS)
+- Docker image built locally or pushed to a container registry
+
+#### Option A: Kustomize (Built into `kubectl`)
+
+1. Build local image (if using `kind`):
+   ```bash
+   docker build -t sentiment-ai:latest .
+   kind load docker-image sentiment-ai:latest
+   ```
+
+2. Apply Kubernetes manifests:
+   ```bash
+   kubectl apply -k deploy/k8s/
+   ```
+
+3. Verify pods and service status:
+   ```bash
+   kubectl get pods
+   kubectl get svc sentiment-ai-service
+   ```
+
+4. Cleanup:
+   ```bash
+   kubectl delete -k deploy/k8s/
+   ```
+
+#### Option B: Helm (Package Manager)
+
+1. Install via Helm chart:
+   ```bash
+   helm install sentiment-ai deploy/helm/sentiment-ai
+   ```
+
+2. Override default values (e.g. replica count or image tag):
+   ```bash
+   helm upgrade sentiment-ai deploy/helm/sentiment-ai --set replicaCount=3
+   ```
+
+3. Uninstall Helm release:
+   ```bash
+   helm uninstall sentiment-ai
+   ```
+
+#### Option C: GitOps with Argo CD
+
+1. Apply the Argo CD Application manifest to your cluster:
+   ```bash
+   kubectl apply -f deploy/argocd/application.yaml
+   ```
+
+2. Argo CD will automatically pull the Helm chart from `deploy/helm/sentiment-ai` and synchronize state with the cluster.
+
+3. Verify application status in Argo CD:
+   ```bash
+   argocd app get sentiment-ai
+   ```
+
+
 ## Monitoring and Maintenance
+
 
 ### Health Checks
 
@@ -185,6 +251,7 @@ Logs are output in JSON format for easy integration with log management systems.
 - For Docker: Adjust the number of containers in docker-compose.yml
 - For AWS: Configure auto-scaling in Elastic Beanstalk
 - For Google Cloud Run: Set min/max instances and concurrency
+- For Kubernetes: Use `kubectl scale deployment/sentiment-ai-deployment --replicas=N` or configure HorizontalPodAutoscaler (HPA)
 
 ### Security Considerations
 
